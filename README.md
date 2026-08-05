@@ -1,4 +1,42 @@
-# CFAM: Core Filtering AI Middleware
+# CFAM: Middleware de Filtragem para IA 🇧🇷
+
+## O que é
+O CFAM é uma ferramenta de linha de comando (CLI) que funciona como uma camada de segurança entre os modelos de IA e o seu sistema interno. Ele garante que só passe o que é seguro e bem formatado.
+
+Modelos de IA geram respostas imprevisíveis. O CFAM resolve isso aplicando filtros rígidos e determinísticos.
+
+## O que ele faz
+*   **Intercepta o Dado:** Captura a resposta da IA imediatamente após ela ser gerada.
+*   **Aplica Filtros Determinísticos:** Avalia o conteúdo com lógica rígida. Se não estiver no formato exato esperado, é rejeitado.
+*   **Impede Travamentos:** Funciona como um fusível. Se a IA mandar um dado quebrado, o CFAM bloqueia e seu sistema não cai.
+*   **Gera Log de Auditoria:** Grava cada decisão (aceito ou bloqueado) no arquivo `cfam_audit_ledger.log`.
+
+## Soluções de Segurança
+*   **Bloqueio de Payload Malicioso:** Intercepta e descarta injeções de código e tentativas de roubo de dados.
+*   **Proteção contra Crash:** Protege suas APIs e bancos de dados de dados malformados.
+*   **Superfície de Ataque Reduzida:** É um binário compilado único, sem depender de um monte de pacotes externos.
+*   **Rastreabilidade:** Tudo fica registrado localmente para análise forense.
+
+## Status: Prova de Conceito (PoC)
+Este software é atualmente uma Prova de Conceito experimental, para fins de pesquisa e testes. Prioriza a integridade do dado.
+
+## Como Funciona o Filtro
+1.  **Integridade Estrutural:** Bloqueia payloads cortados ou com formatação quebrada.
+2.  **Limite de Fronteira:** Rejeita payloads muito grandes ou com caracteres inválidos.
+3.  **Rejeição de Anomalia:** Bloqueia estruturas de ataque conhecidas.
+
+### Exemplo
+*   **Aceito:** Payload completo e bem formado. (Retorna `Exit Code: 0`)
+*   **Rejeitado:** Resposta cortada ou malformada. (Bloqueia e retorna `Exit Code: 1`)
+
+## Decisões de Arquitetura
+*   **Feito em Rust:** Para garantir segurança de memória, baixa latência e baixo consumo.
+*   **Zero Dependências:** Roda isolado, sem precisar de interpretador.
+
+
+  --
+
+# CFAM: Core Filtering AI Middleware 🇺🇸
 
 ## Overview
 CFAM is a command-line interface (CLI) tool that acts as a deterministic filtering layer between AI models and your internal systems. Its primary function is to enforce structural and logical rules on AI outputs.
