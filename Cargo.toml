@@ -1,0 +1,5 @@
+[package]
+name = "cfam"
+version = "0.1.0"
+edition = "2021"
+description = "Core Framework for Agent Management - Public Interface"
