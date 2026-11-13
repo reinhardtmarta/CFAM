@@ -1,95 +1,70 @@
-# CFAM: Middleware de Filtragem para IA 🇧🇷
+# CFAM — Core Filtering AI Middleware
 
-## O que é
-O CFAM é uma ferramenta de linha de comando (CLI) que funciona como uma camada de segurança entre os modelos de IA e o seu sistema interno. Ele garante que só passe o que é seguro e bem formatado.
+![Rust](https://img.shields.io/badge/Rust-000000?style=for-the-badge&logo=rust&logoColor=white)
+![Docker](https://img.shields.io/badge/Docker-2496ED?style=for-the-badge&logo=docker&logoColor=white)
+![Status](https://img.shields.io/badge/Status-Integração_IA_&_Contêineres-success?style=for-the-badge)
+![Architecture](https://img.shields.io/badge/Arquitetura-CLI_Determinística-blue?style=for-the-badge)
+![Security](https://img.shields.io/badge/Zero_Dependencies-Binário_Isolado-critical?style=for-the-badge)
 
-Modelos de IA geram respostas imprevisíveis. O CFAM resolve isso aplicando filtros rígidos e determinísticos.
+---
 
-## O que ele faz
-*   **Intercepta o Dado:** Captura a resposta da IA imediatamente após ela ser gerada.
-*   **Aplica Filtros Determinísticos:** Avalia o conteúdo com lógica rígida. Se não estiver no formato exato esperado, é rejeitado.
-*   **Impede Travamentos:** Funciona como um fusível. Se a IA mandar um dado quebrado, o CFAM bloqueia e seu sistema não cai.
-*   **Gera Log de Auditoria:** Grava cada decisão (aceito ou bloqueado) no arquivo `cfam_audit_ledger.log`.
+## 🇧🇷 Português
 
-## Soluções de Segurança
-*   **Bloqueio de Payload Malicioso:** Intercepta e descarta injeções de código e tentativas de roubo de dados.
-*   **Proteção contra Crash:** Protege suas APIs e bancos de dados de dados malformados.
-*   **Superfície de Ataque Reduzida:** É um binário compilado único, sem depender de um monte de pacotes externos.
-*   **Rastreabilidade:** Tudo fica registrado localmente para análise forense.
+**CFAM** é uma ferramenta de linha de comando (CLI) escrita em Rust que atua como barreira de segurança determinística (sempre gera o mesmo resultado para a mesma entrada) entre modelos de IA e sistemas internos.
 
-## Status: Prova de Conceito (PoC)
-Este software é atualmente uma Prova de Conceito experimental, para fins de pesquisa e testes. Prioriza a integridade do dado.
+### 📍 Fase Atual: Integração Real & Contêineres
+O projeto avançou da Prova de Conceito (PoC) para testes práticos em ambiente isolado:
+* **Integração com IA:** Conexão direta com modelos para interceptação e validação de respostas em tempo de execução (*runtime*).
+* **Testes em Contêineres:** Execução via Docker para simular falhas reais, injeção de dados quebrados e medir consumo sob estresse.
 
-## Como Funciona o Filtro
-1.  **Integridade Estrutural:** Bloqueia payloads cortados ou com formatação quebrada.
-2.  **Limite de Fronteira:** Rejeita payloads muito grandes ou com caracteres inválidos.
-3.  **Rejeição de Anomalia:** Bloqueia estruturas de ataque conhecidas.
+> **Nota:** O motor principal com as regras proprietárias está em repositório privado. Este repositório público exibe a interface estrutural de demonstração.
 
-### Exemplo
-*   **Aceito:** Payload completo e bem formado. (Retorna `Exit Code: 0`)
-*   **Rejeitado:** Resposta cortada ou malformada. (Bloqueia e retorna `Exit Code: 1`)
+### 🛡️ O que ele resolve
+| Camada | Função |
+| :--- | :--- |
+| **Interceptação** | Captura o *payload* (carga de dados) gerado pela IA antes de chegar à sua aplicação. |
+| **Veto Lógico** | Bloqueia dados truncados, malformados, injeções de código ou respostas com incerteza. |
+| **Proteção contra Crash** | Funciona como fusível: se a IA falhar, o sistema interno permanece intacto. |
+| **Auditoria Imutável** | Registra cada bloqueio ou aprovação em `cfam_audit_ledger.log` (*append-only* — apenas adição). |
 
-## Decisões de Arquitetura
-*   **Feito em Rust:** Para garantir segurança de memória, baixa latência e baixo consumo.
-*   **Zero Dependências:** Roda isolado, sem precisar de interpretador.
+### ⚙️ Contrato de Validação
+1. **Integridade Estrutural:** Exige formatação completa e delimitadores fechados.
+2. **Limite de Fronteira:** Rejeita excesso de tamanho e caracteres de controle inválidos.
+3. **Rejeição de Anomalia:** Descarta padrões de ataque conhecidos.
 
+* **Aprovado:** `Exit Code: 0` (segue o fluxo)
+* **Rejeitado:** `Exit Code: 1` (execução bloqueada)
 
-  --
-
-# CFAM: Core Filtering AI Middleware 🇺🇸
-
-## Overview
-CFAM is a command-line interface (CLI) tool that acts as a deterministic filtering layer between AI models and your internal systems. Its primary function is to enforce structural and logical rules on AI outputs.
-
-## What It Does
-AI models generate probabilistic and unpredictable responses. CFAM solves this by applying strict, rule-based validation to ensure only safe, structured, and compliant data passes through to your applications.
-
-*   **Intercepts Data:** Captures the AI payload immediately after generation.
-*   **Applies Deterministic Filters:** Evaluates the payload using rigid, non-probabilistic logic. If the data does not match the exact expected format or rules, it is rejected.
-*   **Enforces Governance:** Acts as a hard-coded barrier to prevent system crashes or logic errors caused by AI hallucinations.
-*   **Generates Audit Logs:** Records every decision (accepted or blocked payloads) in a local ledger file for full operational transparency.
-*   ## Security Solutions
-CFAM provides a hard security layer for AI integrations by addressing vulnerabilities that traditional software frameworks leave exposed:
-
-* **Malicious Payload Blocking:** Intercepts and discards AI outputs that contain injection attacks, malicious code, or unauthorized data extractions before they reach your internal infrastructure.
-* **System Crash Protection:** Acts as a technical fuse. If an AI model returns broken, incomplete, or malformed data, CFAM blocks the transaction immediately, protecting downstream APIs and databases from crashing.
-* **Reduced Attack Surface:** Built as a standalone, compiled binary. It eliminates the security risks associated with large trees of third-party software dependencies common in interpreted environments.
-* **Traceability and Audit Ledger:** Records every single filtering decision into a permanent, local log file. This enables immediate forensic analysis of blocked payloads and model compliance.
-
-## Status: Proof of Concept (PoC)
-This software is currently an experimental Proof of Concept (PoC). It is designed strictly for research, testing, and evaluation purposes. At this stage, the system prioritizes logical enforcement and data integrity over high-scale distributed performance.
-
-## Verification
-To ensure the integrity of the downloaded binary, verify its SHA-256 checksum against the values provided in the official GitHub Releases page.
-
-## Filter Contract & Validation Rules
-CFAM inspects incoming string payloads via strict structural analysis. It evaluates data against three non-probabilistic criteria:
-
-1. **Structural Integrity:** Detects and blocks truncated payloads or broken formatting (e.g., incomplete strings or unclosed markers).
-2. **Boundary Enforcement:** Rejects payloads that exceed structural length constraints or contain invalid control characters.
-3. **Anomaly Rejection:** Blocks payloads containing known adversarial structures or system-level escape sequences.
-
-### Example
-* **Accepted Input:** A complete, well-formed payload that strictly respects formatting boundaries. (System returns `Exit Code: 0`).
-* **Rejected Input:** Truncated AI responses, unclosed delimiters, or malformed data streams. (System blocks execution and returns `Exit Code: 1`).
-
-  ## Architectural Decisions
-* **Development in Rust:** Built strictly for memory safety, low latency, and predictable resource allocation.
-  
-* **Zero Runtime Dependencies:** Distributed as a statically compiled binary. It runs entirely isolated from interpreters, virtual machines, or external package managers, reducing the system's attack surface.
-* 
-## Usage
-CFAM operates as a standalone binary executable.
-cfam_audit_ledger.log
-
+### 🚀 Uso
 ```bash
-./cfam "Your input or task description"
+./cfam "Sua tarefa ou payload de entrada"
+
 ```
 
-## Author & Support
-Developed by Marta Reinhardt
-For verification, security inquiries, or bug reports regarding the compiled binary, please use the official GitHub repository issue tracker.
+# 🇺🇸 English
+## CFAM is a Rust-based command-line interface (CLI) tool acting as a deterministic security barrier (always producing the same output for a given input) between AI models and internal systems.
+📍 Current Phase: Live AI Integration & Containers
+The project has moved from Proof of Concept (PoC) into practical validation:
+ * Live AI Integration: Direct runtime interception and validation of AI model outputs.
+ * Containerized Testing: Isolated Docker workloads to benchmark latency, simulate malformed payloads, and run stress tests.
+> Note: The core engine containing proprietary filtering heuristics resides in a private repository. This public repository provides the architectural interface for reference.
+> 
+🛡️ Core Capabilities
+| Layer | Function |
+|---|---|
+| Interception | Captures AI payloads immediately after generation before reaching downstream apps. |
+| Logical Veto | Blocks truncated outputs, malformed structures, code injections, and probabilistic uncertainty. |
+| Crash Protection | Acts as a technical fuse to prevent API or database failures caused by broken AI responses. |
+| Immutable Audit | Logs every decision (approved/blocked) into cfam_audit_ledger.log (append-only ledger). |
+⚙️ Validation Contract
+ * Structural Integrity: Enforces complete formatting and closed delimiters.
+ * Boundary Enforcement: Rejects oversized payloads and invalid control characters.
+ * Anomaly Rejection: Drops known adversarial structures and escape sequences.
+ * Approved: Exit Code: 0
+ * Rejected: Exit Code: 1
+🚀 Usage
+./cfam "Your input or task description"
 
- Copyright © 2026 Marta
+Author: Marta Reinhardt | Verification: Check SHA-256 checksums on official GitHub Releases.
+Copyright © 2026 Marta Reinhardt. All Rights Reserved.
 
-All Rights Reserved.
