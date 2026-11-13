@@ -34,6 +34,7 @@ O projeto avançou da Prova de Conceito (PoC) para testes práticos em ambiente 
 
 * **Aprovado:** `Exit Code: 0` (segue o fluxo)
 * **Rejeitado:** `Exit Code: 1` (execução bloqueada)
+Ainda em construção 
 
 ### 🚀 Uso
 ```bash
@@ -62,6 +63,7 @@ The project has moved from Proof of Concept (PoC) into practical validation:
  * Anomaly Rejection: Drops known adversarial structures and escape sequences.
  * Approved: Exit Code: 0
  * Rejected: Exit Code: 1
+   Loading...
 🚀 Usage
 ./cfam "Your input or task description"
 
